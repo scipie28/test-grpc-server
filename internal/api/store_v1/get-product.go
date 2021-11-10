@@ -9,7 +9,7 @@ import (
 )
 
 // GetProduct реализует ecommerce.GetProduct
-func (s *Server) GetProduct(ctx context.Context, in *store_v1.ProductID) (*store_v1.Product, error) {
+func (s *Server) GetProduct(_ context.Context, in *store_v1.ProductID) (*store_v1.Product, error) {
 	value, exists := s.productMap[in.Value]
 	if exists {
 		return value, status.New(codes.OK, "").Err()
