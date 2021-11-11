@@ -13,6 +13,7 @@ import (
 	status "google.golang.org/grpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
 	reflect "reflect"
 	sync "sync"
 )
@@ -24,16 +25,20 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type ProductID struct {
+type Order struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Value string `protobuf:"bytes,1,opt,name=value,proto3" json:"value,omitempty"`
+	Id          string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Items       []string `protobuf:"bytes,2,rep,name=items,proto3" json:"items,omitempty"`
+	Description string   `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	Price       float32  `protobuf:"fixed32,4,opt,name=price,proto3" json:"price,omitempty"`
+	Destination string   `protobuf:"bytes,5,opt,name=destination,proto3" json:"destination,omitempty"`
 }
 
-func (x *ProductID) Reset() {
-	*x = ProductID{}
+func (x *Order) Reset() {
+	*x = Order{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_store_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -41,13 +46,13 @@ func (x *ProductID) Reset() {
 	}
 }
 
-func (x *ProductID) String() string {
+func (x *Order) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ProductID) ProtoMessage() {}
+func (*Order) ProtoMessage() {}
 
-func (x *ProductID) ProtoReflect() protoreflect.Message {
+func (x *Order) ProtoReflect() protoreflect.Message {
 	mi := &file_store_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -59,31 +64,58 @@ func (x *ProductID) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ProductID.ProtoReflect.Descriptor instead.
-func (*ProductID) Descriptor() ([]byte, []int) {
+// Deprecated: Use Order.ProtoReflect.Descriptor instead.
+func (*Order) Descriptor() ([]byte, []int) {
 	return file_store_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ProductID) GetValue() string {
+func (x *Order) GetId() string {
 	if x != nil {
-		return x.Value
+		return x.Id
 	}
 	return ""
 }
 
-type Product struct {
+func (x *Order) GetItems() []string {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *Order) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *Order) GetPrice() float32 {
+	if x != nil {
+		return x.Price
+	}
+	return 0
+}
+
+func (x *Order) GetDestination() string {
+	if x != nil {
+		return x.Destination
+	}
+	return ""
+}
+
+type CombinedShipment struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id          string  `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name        string  `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Description string  `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	Price       float32 `protobuf:"fixed32,4,opt,name=price,proto3" json:"price,omitempty"`
+	Id         string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Status     string   `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	OrdersList []*Order `protobuf:"bytes,3,rep,name=ordersList,proto3" json:"ordersList,omitempty"`
 }
 
-func (x *Product) Reset() {
-	*x = Product{}
+func (x *CombinedShipment) Reset() {
+	*x = CombinedShipment{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_store_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -91,13 +123,13 @@ func (x *Product) Reset() {
 	}
 }
 
-func (x *Product) String() string {
+func (x *CombinedShipment) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Product) ProtoMessage() {}
+func (*CombinedShipment) ProtoMessage() {}
 
-func (x *Product) ProtoReflect() protoreflect.Message {
+func (x *CombinedShipment) ProtoReflect() protoreflect.Message {
 	mi := &file_store_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -109,64 +141,76 @@ func (x *Product) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Product.ProtoReflect.Descriptor instead.
-func (*Product) Descriptor() ([]byte, []int) {
+// Deprecated: Use CombinedShipment.ProtoReflect.Descriptor instead.
+func (*CombinedShipment) Descriptor() ([]byte, []int) {
 	return file_store_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Product) GetId() string {
+func (x *CombinedShipment) GetId() string {
 	if x != nil {
 		return x.Id
 	}
 	return ""
 }
 
-func (x *Product) GetName() string {
+func (x *CombinedShipment) GetStatus() string {
 	if x != nil {
-		return x.Name
+		return x.Status
 	}
 	return ""
 }
 
-func (x *Product) GetDescription() string {
+func (x *CombinedShipment) GetOrdersList() []*Order {
 	if x != nil {
-		return x.Description
+		return x.OrdersList
 	}
-	return ""
-}
-
-func (x *Product) GetPrice() float32 {
-	if x != nil {
-		return x.Price
-	}
-	return 0
+	return nil
 }
 
 var File_store_proto protoreflect.FileDescriptor
 
 var file_store_proto_rawDesc = []byte{
 	0x0a, 0x0b, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x08, 0x73,
-	0x74, 0x6f, 0x72, 0x65, 0x5f, 0x76, 0x31, 0x22, 0x21, 0x0a, 0x09, 0x50, 0x72, 0x6f, 0x64, 0x75,
-	0x63, 0x74, 0x49, 0x44, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x65, 0x0a, 0x07, 0x50, 0x72,
-	0x6f, 0x64, 0x75, 0x63, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x20, 0x0a, 0x0b, 0x64, 0x65, 0x73,
-	0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b,
-	0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x14, 0x0a, 0x05, 0x70,
-	0x72, 0x69, 0x63, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x02, 0x52, 0x05, 0x70, 0x72, 0x69, 0x63,
-	0x65, 0x32, 0x79, 0x0a, 0x0b, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x6e, 0x66, 0x6f,
-	0x12, 0x34, 0x0a, 0x0a, 0x61, 0x64, 0x64, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x12, 0x11,
-	0x2e, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x5f, 0x76, 0x31, 0x2e, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63,
-	0x74, 0x1a, 0x13, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x5f, 0x76, 0x31, 0x2e, 0x50, 0x72, 0x6f,
-	0x64, 0x75, 0x63, 0x74, 0x49, 0x44, 0x12, 0x34, 0x0a, 0x0a, 0x67, 0x65, 0x74, 0x50, 0x72, 0x6f,
-	0x64, 0x75, 0x63, 0x74, 0x12, 0x13, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x5f, 0x76, 0x31, 0x2e,
-	0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x44, 0x1a, 0x11, 0x2e, 0x73, 0x74, 0x6f, 0x72,
-	0x65, 0x5f, 0x76, 0x31, 0x2e, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x42, 0x33, 0x5a, 0x31,
-	0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x73, 0x63, 0x69, 0x70, 0x69,
-	0x65, 0x32, 0x38, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x2d, 0x67, 0x72, 0x70, 0x63, 0x2d, 0x73, 0x65,
-	0x72, 0x76, 0x65, 0x72, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x5f, 0x76,
-	0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x74, 0x6f, 0x72, 0x65, 0x5f, 0x76, 0x31, 0x1a, 0x1e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x77, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72,
+	0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x87, 0x01, 0x0a, 0x05, 0x4f, 0x72, 0x64, 0x65,
+	0x72, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69,
+	0x64, 0x12, 0x14, 0x0a, 0x05, 0x69, 0x74, 0x65, 0x6d, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x09,
+	0x52, 0x05, 0x69, 0x74, 0x65, 0x6d, 0x73, 0x12, 0x20, 0x0a, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72,
+	0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x64, 0x65,
+	0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x14, 0x0a, 0x05, 0x70, 0x72, 0x69,
+	0x63, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x02, 0x52, 0x05, 0x70, 0x72, 0x69, 0x63, 0x65, 0x12,
+	0x20, 0x0a, 0x0b, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x05,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f,
+	0x6e, 0x22, 0x6b, 0x0a, 0x10, 0x43, 0x6f, 0x6d, 0x62, 0x69, 0x6e, 0x65, 0x64, 0x53, 0x68, 0x69,
+	0x70, 0x6d, 0x65, 0x6e, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x2f, 0x0a,
+	0x0a, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x73, 0x4c, 0x69, 0x73, 0x74, 0x18, 0x03, 0x20, 0x03, 0x28,
+	0x0b, 0x32, 0x0f, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x5f, 0x76, 0x31, 0x2e, 0x4f, 0x72, 0x64,
+	0x65, 0x72, 0x52, 0x0a, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x73, 0x4c, 0x69, 0x73, 0x74, 0x32, 0x9d,
+	0x02, 0x0a, 0x0f, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65,
+	0x6e, 0x74, 0x12, 0x39, 0x0a, 0x08, 0x67, 0x65, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x12, 0x1c,
+	0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66,
+	0x2e, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x1a, 0x0f, 0x2e, 0x73,
+	0x74, 0x6f, 0x72, 0x65, 0x5f, 0x76, 0x31, 0x2e, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x12, 0x3f, 0x0a,
+	0x0c, 0x73, 0x65, 0x61, 0x72, 0x63, 0x68, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x73, 0x12, 0x1c, 0x2e,
+	0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e,
+	0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x1a, 0x0f, 0x2e, 0x73, 0x74,
+	0x6f, 0x72, 0x65, 0x5f, 0x76, 0x31, 0x2e, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x30, 0x01, 0x12, 0x3f,
+	0x0a, 0x0c, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x73, 0x12, 0x0f,
+	0x2e, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x5f, 0x76, 0x31, 0x2e, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x1a,
+	0x1c, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75,
+	0x66, 0x2e, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x28, 0x01, 0x12,
+	0x4d, 0x0a, 0x0d, 0x70, 0x72, 0x6f, 0x63, 0x65, 0x73, 0x73, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x73,
+	0x12, 0x1c, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
+	0x75, 0x66, 0x2e, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x1a, 0x1a,
+	0x2e, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x5f, 0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6d, 0x62, 0x69, 0x6e,
+	0x65, 0x64, 0x53, 0x68, 0x69, 0x70, 0x6d, 0x65, 0x6e, 0x74, 0x28, 0x01, 0x30, 0x01, 0x42, 0x33,
+	0x5a, 0x31, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x73, 0x63, 0x69,
+	0x70, 0x69, 0x65, 0x32, 0x38, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x2d, 0x67, 0x72, 0x70, 0x63, 0x2d,
+	0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x73, 0x74, 0x6f, 0x72, 0x65,
+	0x5f, 0x76, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -183,19 +227,25 @@ func file_store_proto_rawDescGZIP() []byte {
 
 var file_store_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_store_proto_goTypes = []interface{}{
-	(*ProductID)(nil), // 0: store_v1.ProductID
-	(*Product)(nil),   // 1: store_v1.Product
+	(*Order)(nil),                  // 0: store_v1.Order
+	(*CombinedShipment)(nil),       // 1: store_v1.CombinedShipment
+	(*wrapperspb.StringValue)(nil), // 2: google.protobuf.StringValue
 }
 var file_store_proto_depIdxs = []int32{
-	1, // 0: store_v1.ProductInfo.addProduct:input_type -> store_v1.Product
-	0, // 1: store_v1.ProductInfo.getProduct:input_type -> store_v1.ProductID
-	0, // 2: store_v1.ProductInfo.addProduct:output_type -> store_v1.ProductID
-	1, // 3: store_v1.ProductInfo.getProduct:output_type -> store_v1.Product
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0, // 0: store_v1.CombinedShipment.ordersList:type_name -> store_v1.Order
+	2, // 1: store_v1.OrderManagement.getOrder:input_type -> google.protobuf.StringValue
+	2, // 2: store_v1.OrderManagement.searchOrders:input_type -> google.protobuf.StringValue
+	0, // 3: store_v1.OrderManagement.updateOrders:input_type -> store_v1.Order
+	2, // 4: store_v1.OrderManagement.processOrders:input_type -> google.protobuf.StringValue
+	0, // 5: store_v1.OrderManagement.getOrder:output_type -> store_v1.Order
+	0, // 6: store_v1.OrderManagement.searchOrders:output_type -> store_v1.Order
+	2, // 7: store_v1.OrderManagement.updateOrders:output_type -> google.protobuf.StringValue
+	1, // 8: store_v1.OrderManagement.processOrders:output_type -> store_v1.CombinedShipment
+	5, // [5:9] is the sub-list for method output_type
+	1, // [1:5] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_store_proto_init() }
@@ -205,7 +255,7 @@ func file_store_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_store_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ProductID); i {
+			switch v := v.(*Order); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -217,7 +267,7 @@ func file_store_proto_init() {
 			}
 		}
 		file_store_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Product); i {
+			switch v := v.(*CombinedShipment); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -257,110 +307,276 @@ var _ grpc.ClientConnInterface
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion6
 
-// ProductInfoClient is the client API for ProductInfo service.
+// OrderManagementClient is the client API for OrderManagement service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type ProductInfoClient interface {
-	AddProduct(ctx context.Context, in *Product, opts ...grpc.CallOption) (*ProductID, error)
-	GetProduct(ctx context.Context, in *ProductID, opts ...grpc.CallOption) (*Product, error)
+type OrderManagementClient interface {
+	GetOrder(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*Order, error)
+	SearchOrders(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (OrderManagement_SearchOrdersClient, error)
+	UpdateOrders(ctx context.Context, opts ...grpc.CallOption) (OrderManagement_UpdateOrdersClient, error)
+	ProcessOrders(ctx context.Context, opts ...grpc.CallOption) (OrderManagement_ProcessOrdersClient, error)
 }
 
-type productInfoClient struct {
+type orderManagementClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewProductInfoClient(cc grpc.ClientConnInterface) ProductInfoClient {
-	return &productInfoClient{cc}
+func NewOrderManagementClient(cc grpc.ClientConnInterface) OrderManagementClient {
+	return &orderManagementClient{cc}
 }
 
-func (c *productInfoClient) AddProduct(ctx context.Context, in *Product, opts ...grpc.CallOption) (*ProductID, error) {
-	out := new(ProductID)
-	err := c.cc.Invoke(ctx, "/store_v1.ProductInfo/addProduct", in, out, opts...)
+func (c *orderManagementClient) GetOrder(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*Order, error) {
+	out := new(Order)
+	err := c.cc.Invoke(ctx, "/store_v1.OrderManagement/getOrder", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *productInfoClient) GetProduct(ctx context.Context, in *ProductID, opts ...grpc.CallOption) (*Product, error) {
-	out := new(Product)
-	err := c.cc.Invoke(ctx, "/store_v1.ProductInfo/getProduct", in, out, opts...)
+func (c *orderManagementClient) SearchOrders(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (OrderManagement_SearchOrdersClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_OrderManagement_serviceDesc.Streams[0], "/store_v1.OrderManagement/searchOrders", opts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &orderManagementSearchOrdersClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
 }
 
-// ProductInfoServer is the server API for ProductInfo service.
-type ProductInfoServer interface {
-	AddProduct(context.Context, *Product) (*ProductID, error)
-	GetProduct(context.Context, *ProductID) (*Product, error)
+type OrderManagement_SearchOrdersClient interface {
+	Recv() (*Order, error)
+	grpc.ClientStream
 }
 
-// UnimplementedProductInfoServer can be embedded to have forward compatible implementations.
-type UnimplementedProductInfoServer struct {
+type orderManagementSearchOrdersClient struct {
+	grpc.ClientStream
 }
 
-func (*UnimplementedProductInfoServer) AddProduct(context.Context, *Product) (*ProductID, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddProduct not implemented")
-}
-func (*UnimplementedProductInfoServer) GetProduct(context.Context, *ProductID) (*Product, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetProduct not implemented")
-}
-
-func RegisterProductInfoServer(s *grpc.Server, srv ProductInfoServer) {
-	s.RegisterService(&_ProductInfo_serviceDesc, srv)
+func (x *orderManagementSearchOrdersClient) Recv() (*Order, error) {
+	m := new(Order)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
-func _ProductInfo_AddProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Product)
+func (c *orderManagementClient) UpdateOrders(ctx context.Context, opts ...grpc.CallOption) (OrderManagement_UpdateOrdersClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_OrderManagement_serviceDesc.Streams[1], "/store_v1.OrderManagement/updateOrders", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &orderManagementUpdateOrdersClient{stream}
+	return x, nil
+}
+
+type OrderManagement_UpdateOrdersClient interface {
+	Send(*Order) error
+	CloseAndRecv() (*wrapperspb.StringValue, error)
+	grpc.ClientStream
+}
+
+type orderManagementUpdateOrdersClient struct {
+	grpc.ClientStream
+}
+
+func (x *orderManagementUpdateOrdersClient) Send(m *Order) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *orderManagementUpdateOrdersClient) CloseAndRecv() (*wrapperspb.StringValue, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(wrapperspb.StringValue)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *orderManagementClient) ProcessOrders(ctx context.Context, opts ...grpc.CallOption) (OrderManagement_ProcessOrdersClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_OrderManagement_serviceDesc.Streams[2], "/store_v1.OrderManagement/processOrders", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &orderManagementProcessOrdersClient{stream}
+	return x, nil
+}
+
+type OrderManagement_ProcessOrdersClient interface {
+	Send(*wrapperspb.StringValue) error
+	Recv() (*CombinedShipment, error)
+	grpc.ClientStream
+}
+
+type orderManagementProcessOrdersClient struct {
+	grpc.ClientStream
+}
+
+func (x *orderManagementProcessOrdersClient) Send(m *wrapperspb.StringValue) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *orderManagementProcessOrdersClient) Recv() (*CombinedShipment, error) {
+	m := new(CombinedShipment)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// OrderManagementServer is the server API for OrderManagement service.
+type OrderManagementServer interface {
+	GetOrder(context.Context, *wrapperspb.StringValue) (*Order, error)
+	SearchOrders(*wrapperspb.StringValue, OrderManagement_SearchOrdersServer) error
+	UpdateOrders(OrderManagement_UpdateOrdersServer) error
+	ProcessOrders(OrderManagement_ProcessOrdersServer) error
+}
+
+// UnimplementedOrderManagementServer can be embedded to have forward compatible implementations.
+type UnimplementedOrderManagementServer struct {
+}
+
+func (*UnimplementedOrderManagementServer) GetOrder(context.Context, *wrapperspb.StringValue) (*Order, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrder not implemented")
+}
+func (*UnimplementedOrderManagementServer) SearchOrders(*wrapperspb.StringValue, OrderManagement_SearchOrdersServer) error {
+	return status.Errorf(codes.Unimplemented, "method SearchOrders not implemented")
+}
+func (*UnimplementedOrderManagementServer) UpdateOrders(OrderManagement_UpdateOrdersServer) error {
+	return status.Errorf(codes.Unimplemented, "method UpdateOrders not implemented")
+}
+func (*UnimplementedOrderManagementServer) ProcessOrders(OrderManagement_ProcessOrdersServer) error {
+	return status.Errorf(codes.Unimplemented, "method ProcessOrders not implemented")
+}
+
+func RegisterOrderManagementServer(s *grpc.Server, srv OrderManagementServer) {
+	s.RegisterService(&_OrderManagement_serviceDesc, srv)
+}
+
+func _OrderManagement_GetOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(wrapperspb.StringValue)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProductInfoServer).AddProduct(ctx, in)
+		return srv.(OrderManagementServer).GetOrder(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/store_v1.ProductInfo/AddProduct",
+		FullMethod: "/store_v1.OrderManagement/GetOrder",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductInfoServer).AddProduct(ctx, req.(*Product))
+		return srv.(OrderManagementServer).GetOrder(ctx, req.(*wrapperspb.StringValue))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProductInfo_GetProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ProductID)
-	if err := dec(in); err != nil {
+func _OrderManagement_SearchOrders_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(wrapperspb.StringValue)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(OrderManagementServer).SearchOrders(m, &orderManagementSearchOrdersServer{stream})
+}
+
+type OrderManagement_SearchOrdersServer interface {
+	Send(*Order) error
+	grpc.ServerStream
+}
+
+type orderManagementSearchOrdersServer struct {
+	grpc.ServerStream
+}
+
+func (x *orderManagementSearchOrdersServer) Send(m *Order) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _OrderManagement_UpdateOrders_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(OrderManagementServer).UpdateOrders(&orderManagementUpdateOrdersServer{stream})
+}
+
+type OrderManagement_UpdateOrdersServer interface {
+	SendAndClose(*wrapperspb.StringValue) error
+	Recv() (*Order, error)
+	grpc.ServerStream
+}
+
+type orderManagementUpdateOrdersServer struct {
+	grpc.ServerStream
+}
+
+func (x *orderManagementUpdateOrdersServer) SendAndClose(m *wrapperspb.StringValue) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *orderManagementUpdateOrdersServer) Recv() (*Order, error) {
+	m := new(Order)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
-	if interceptor == nil {
-		return srv.(ProductInfoServer).GetProduct(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/store_v1.ProductInfo/GetProduct",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductInfoServer).GetProduct(ctx, req.(*ProductID))
-	}
-	return interceptor(ctx, in, info, handler)
+	return m, nil
 }
 
-var _ProductInfo_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "store_v1.ProductInfo",
-	HandlerType: (*ProductInfoServer)(nil),
+func _OrderManagement_ProcessOrders_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(OrderManagementServer).ProcessOrders(&orderManagementProcessOrdersServer{stream})
+}
+
+type OrderManagement_ProcessOrdersServer interface {
+	Send(*CombinedShipment) error
+	Recv() (*wrapperspb.StringValue, error)
+	grpc.ServerStream
+}
+
+type orderManagementProcessOrdersServer struct {
+	grpc.ServerStream
+}
+
+func (x *orderManagementProcessOrdersServer) Send(m *CombinedShipment) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *orderManagementProcessOrdersServer) Recv() (*wrapperspb.StringValue, error) {
+	m := new(wrapperspb.StringValue)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+var _OrderManagement_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "store_v1.OrderManagement",
+	HandlerType: (*OrderManagementServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "addProduct",
-			Handler:    _ProductInfo_AddProduct_Handler,
-		},
-		{
-			MethodName: "getProduct",
-			Handler:    _ProductInfo_GetProduct_Handler,
+			MethodName: "getOrder",
+			Handler:    _OrderManagement_GetOrder_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "searchOrders",
+			Handler:       _OrderManagement_SearchOrders_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "updateOrders",
+			Handler:       _OrderManagement_UpdateOrders_Handler,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "processOrders",
+			Handler:       _OrderManagement_ProcessOrders_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "store.proto",
 }
