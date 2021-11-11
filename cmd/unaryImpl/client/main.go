@@ -14,10 +14,6 @@ const (
 )
 
 func main() {
-	//test := []int64{2: 3, 8, 0: 9}
-	//fmt.Println(test)
-	//return
-
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
