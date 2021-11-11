@@ -26,7 +26,7 @@ func main() {
 
 	c := store_v1.NewOrderManagementClient(conn)
 
-	searchStream, _ := c.SearchOrders(ctx, &wrapperspb.StringValue{Value: "Google"})
+	searchStream, _ := c.SearchOrders(ctx, &wrapperspb.StringValue{Value: "PC"})
 
 	for {
 		searchOrder, errOrder := searchStream.Recv()
